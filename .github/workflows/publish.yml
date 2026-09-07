@@ -1,0 +1,35 @@
+name: Publish
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Static demo: site/ is already the build output.
+      # Replace with your generator, for example:
+      #   - run: npm ci && npm run build
+      # and set artifact path to dist (or your output directory).
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: site
+
+  publish:
+    name: Publish
+    needs: build
+    uses: MTE-PE/internal-sites/.github/workflows/publish.yml@main
+    permissions:
+      contents: read
+      id-token: write
+      actions: read
